@@ -44,7 +44,6 @@ namespace RaresAStar {
                 }
 
                 foreach (var neighbour in grid.GetNeighbours(currentNode)) {
-                    Console.WriteLine(neighbour.walkable);
                     if (!neighbour.walkable || closedSet.Contains(neighbour))
                         continue;
 
