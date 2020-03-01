@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Numerics;
 
 namespace RaresAStar
 {
-    public class Node : IEquatable<Node>
+    public class Node : IEquatable<Node>, IHeapItem<Node>
     {
         public bool walkable = false;
         public (int, int) position;
@@ -45,6 +44,20 @@ namespace RaresAStar
             if (other == null)
                 return false;
             return position.Item1 == other.position.Item1 && position.Item2 == other.position.Item2;
+        }
+
+        public int HeapIndex { get; set; }
+
+        public int CompareTo([AllowNull] Node other)
+        {
+            if (other == null)
+                return -1;
+            int compare = FCost.CompareTo(other.FCost);
+            if (compare == 0)
+            {
+                compare = hCost.CompareTo(other.hCost);
+            }
+            return -compare;
         }
     }
 }

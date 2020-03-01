@@ -5,15 +5,24 @@ namespace RaresAStar
 {
     public static class GridExtension
     {
-
         public static void DrawGrid(Grid grid, List<Node> openSet = null, HashSet<Node> closedSet = null)
+        {
+            DrawGrid(grid, openSet.Contains, closedSet);
+        }
+
+        public static void DrawGrid(Grid grid, Heap<Node> openSet = null, HashSet<Node> closedSet = null)
+        {
+            DrawGrid(grid, openSet.Contains, closedSet);
+        }
+
+        private static void DrawGrid(Grid grid, Func<Node, bool> isOpen = null, HashSet<Node> closedSet = null)
         {
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.DarkGray;
 
-            for (int y = 0; y < grid.GridSizeY; y++)
+            for (int y = 0; y < grid.SizeY; y++)
             {
-                for (int x = 0; x < grid.GridSizeX; x++)
+                for (int x = 0; x < grid.SizeX; x++)
                 {
 
                     Node node = grid.GetNode((x, y));
@@ -29,18 +38,40 @@ namespace RaresAStar
                     }
                     else if (grid.path != null && node != null && grid.path.Contains(node))
                     {
-                        Console.ForegroundColor = ConsoleColor.Cyan;
-                        nodeString = "+";
+                        if (Program.SHOW_TYPE == ShowType.Path || Program.SHOW_TYPE == ShowType.All)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Cyan;
+                            nodeString = "+";
+                        }
+                        else
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            nodeString = "*";
+                        }
                     }
                     else if (closedSet != null && closedSet.Contains(node))
                     {
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        nodeString = "*";
+                        if (Program.SHOW_TYPE == ShowType.OpenAndClosedSets || Program.SHOW_TYPE == ShowType.All)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            nodeString = "*";
+                        }
+                        else
+                        {
+                            nodeString = " ";
+                        }
                     }
-                    else if (openSet != null && openSet.Contains(node))
+                    else if (isOpen != null && isOpen(node))
                     {
-                        Console.ForegroundColor = ConsoleColor.Green;
-                        nodeString = "?";
+                        if (Program.SHOW_TYPE == ShowType.OpenAndClosedSets || Program.SHOW_TYPE == ShowType.All)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Green;
+                            nodeString = "?";
+                        }
+                        else
+                        {
+                            nodeString = " ";
+                        }
                     }
                     else
                     {
@@ -64,6 +95,12 @@ namespace RaresAStar
                 Console.WriteLine("");
             }
         }
+    }
 
+    public enum ShowType
+    {
+        All,
+        Path,
+        OpenAndClosedSets
     }
 }

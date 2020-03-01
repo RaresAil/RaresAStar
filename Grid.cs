@@ -8,8 +8,9 @@ namespace RaresAStar
     public class Grid
     {
         public (int, int) Size { get; private set; }
-        public int GridSizeX => Size.Item1; //Columns
-        public int GridSizeY => Size.Item2; //Lines
+        public int SizeX => Size.Item1; //Columns
+        public int SizeY => Size.Item2; //Lines
+        public int MaxSize => SizeX * SizeY; //Columns and Lines
 
         public List<(int, int)> Obstacles { get; private set; }
         public List<Node> Nodes { get; private set; }
@@ -20,7 +21,7 @@ namespace RaresAStar
             Size = size;
             Obstacles = new List<(int, int)>();
             Nodes = new List<Node>();
-            grid = new Node[GridSizeX, GridSizeY];
+            grid = new Node[SizeX, SizeY];
         }
 
         public Node GetNode((int, int) pos)
@@ -39,7 +40,7 @@ namespace RaresAStar
                         continue;
                     (int, int) check = (node.position.Item1 + x, node.position.Item2 + y);
 
-                    if (check.Item1 >= 0 && check.Item1 < GridSizeX && check.Item2 >= 0 && check.Item2 < GridSizeY)
+                    if (check.Item1 >= 0 && check.Item1 < SizeX && check.Item2 >= 0 && check.Item2 < SizeY)
                     {
                         int posX = check.Item1;
                         int posY = check.Item2;

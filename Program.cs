@@ -1,18 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
-namespace RaresAStar {
-    class Program {
+namespace RaresAStar
+{
+    class Program
+    {
 
-        static void Main(string[] args) {
+        public readonly static bool DRAW_GRID = false;
+        public readonly static bool USE_HEAP = true;
+        public readonly static int DELAY_MS = 0;
+        public readonly static ShowType SHOW_TYPE = ShowType.Path;
+
+        static void Main(string[] args)
+        {
             MainAsync(args).GetAwaiter().GetResult();
         }
 
-        static async Task MainAsync(string[] args) {
-
+        static async Task MainAsync(string[] _)
+        {
             (int, int) posA = (7, 4);
             (int, int) posB = (4, 1);
 
@@ -25,21 +29,30 @@ namespace RaresAStar {
             grid.Obstacles.Add((6, 2));
             grid.Obstacles.Add((7, 2));
 
-            grid.Nodes.Add(new Node(true, posA) {
+            grid.Nodes.Add(new Node(true, posA)
+            {
                 name = "A"
             });
-            grid.Nodes.Add(new Node(true, posB) {
+            grid.Nodes.Add(new Node(true, posB)
+            {
                 name = "B"
             });
 
             grid.CreateGrid();
 
             Pathfinding pathfinding = new Pathfinding(grid);
-            GridExtension.DrawGrid(pathfinding.grid);
+
+            if (DRAW_GRID)
+                GridExtension.DrawGrid(pathfinding.grid, null as Heap<Node>);
 
             await Task.Delay(1000);
-            await pathfinding.FindPath(posA, posB);
+            if (USE_HEAP)
+                await pathfinding.FindPathHeap(posA, posB);
+            else
+                await pathfinding.FindPath(posA, posB);
+
         }
 
     }
+
 }
